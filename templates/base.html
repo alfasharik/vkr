@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    {% block title %}<title>Главная страница</title>{% endblock %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-item"><a href="#">Аутентификация</a></div>
+        <div class="header-item"><a href="#">Отправить SMS</a></div>
+        <div class="header-item"><a href="#">Отправить Viber</a></div>
+        <div class="header-item"><a href="#">Детализация</a></div>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="container">
+        {% block content %}
+            {% block inner_content %}
+            {% endblock %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
