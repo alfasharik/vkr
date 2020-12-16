@@ -6,8 +6,8 @@
 {% block content %}
     {% block inner_content %}
         <div class="inner">
-
-            <form class="main-form" method="post">
+            <form class="main-form" method="post" action=" {% url 'get_session' %} ">
+                {% csrf_token %}
                 <p>
                     <label>Логин: </label>
                     <input type="text" name="login">
@@ -16,9 +16,9 @@
                     <label>Пароль: </label>
                     <input type="password" name="password">
                 </p>
-                <div> lalala</div>
+                <input type="submit">
             </form>
-
+            {{ devino_response.text }}
         </div>
     {% endblock %}
 {% endblock %}
