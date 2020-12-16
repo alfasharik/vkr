@@ -7,6 +7,7 @@ class DevinoClient:
         self.get_session_url = 'https://integrationapi.net/rest/user/sessionid'
         self.send_sms_url = 'https://integrationapi.net/rest/Sms/Send'
         self.send_viber_url = 'https://integrationapi.net/rest/Viber/Send'
+        self.get_sms_status_url = 'https://integrationapi.net/rest/Sms/State'
 
     def get_session(self, login, password):
         params = {'login': login, 'password': password}
@@ -29,5 +30,11 @@ class DevinoClient:
             'DestinationAddress': dest, 'Data': data, 'Validity': validity
         }
         response = requests.post(self.send_viber_url, params=params)
+
+        return response
+
+    def get_sms_status(self, session_id, message_id):
+        params = {'sessionID': session_id, 'messageID': message_id}
+        response = requests.get(self.get_sms_status_url, params=params)
 
         return response
