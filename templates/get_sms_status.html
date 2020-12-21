@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Это пофиг</title>
+{% endblock %}
+
+{% block content %}
+    {% block inner_content %}
+        <div class="inner">
+            <form class="main-form" method="post" action=" {% url 'get_sms_status' %} ">
+                {% csrf_token %}
+                <p>
+                    <label>ИД сессии: </label>
+                    <input type="text" name="session_id">
+                </p>
+                <input type="submit">
+            </form>
+            {% if got_statuses %}
+                Статусы запрошены успешно и сохранены в базу
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}

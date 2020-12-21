@@ -1,6 +1,3 @@
-from datetime import datetime
-from time import sleep
-
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -42,7 +39,7 @@ def send_sms(request):
         session_id, source, dest, data, validity
     )
     message_id = devino_response.text[2:20]
-    SmsMessages.objects.create(message_id=message_id)
+    SmsMessages.objects.create(message_id=message_id, phone=dest)
 
     return render(
         request, 'send_sms.html', {'id': message_id}
@@ -69,22 +66,35 @@ def send_viber(request):
 
 
 def get_sms_status(request):
+    if request.method != 'POST':
+        return render(request, 'get_sms_status.html')
+
+    session_id = request.POST['session_id']
     devino_client = devino_package.DevinoClient()
 
     messages = SmsMessages.objects.filter(state=None)
-
     for message in messages:
         devino_response = devino_client.get_sms_status(
-            '6425D63FD6164166B8E4B4980DE15983D661',
+            session_id,
             message.message_id
         )
 
-        timestamp = devino_response.json()['SubmittedDateUtc'][6:16]
-        submit_dt = datetime.fromtimestamp(int(timestamp))
+        state = devino_response.json()['State']
+        message.state = state
 
-        message.submit_dt = submit_dt
+        state_desc = devino_response.json()['StateDescription']
+        message.state_desc = state_desc
+
+        timestamp = devino_client.get_ts_from_response(
+            devino_response, 'SubmittedDateUtc'
+        )
+        message.set_submit_dt_from_ts(timestamp)
+
+        timestamp = devino_client.get_ts_from_response(
+            devino_response, 'ReportedDateUtc'
+        )
+        message.set_report_dt_from_ts(timestamp)
+
         message.save()
 
-    return render(request, 'detail.html', {'messages': messages})
-# devino_response.json()['CreationDateUtc'][6:16]
-# {"State":0,"CreationDateUtc":"\/Date(1608151480000)\/","SubmittedDateUtc":"\/Date(1608151480000)
+    return render(request, 'get_sms_status.html', {'got_statuses': True})

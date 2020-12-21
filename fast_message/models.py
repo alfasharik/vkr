@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.db import models
+
 
 # Create your models here.
 class SmsMessages(models.Model):
@@ -16,4 +19,10 @@ class SmsMessages(models.Model):
         verbose_name='Дата доставки', null=True, blank=True
     )
 
+    def set_submit_dt_from_ts(self, timestamp):
+        submit_dt = datetime.fromtimestamp(timestamp)
+        self.submit_dt = submit_dt
 
+    def set_report_dt_from_ts(self, timestamp):
+        report_dt = datetime.fromtimestamp(timestamp)
+        self.report_dt = report_dt

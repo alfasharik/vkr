@@ -10,15 +10,16 @@
 
     <div class="header">
         <div class="header-item">
-            <a href="/get_session/">Аутентификация</a>
+            <a href="{% url 'get_session' %}">Аутентификация</a>
         </div>
         <div class="header-item">
-            <a href="/send_sms/">Отправить SMS</a>
+            <a href="{% url 'send_sms' %}">Отправить SMS</a>
         </div>
         <div class="header-item">
-            <a href="/send_viber/">Отправить Viber</a>
+            <a href="{% url 'send_viber' %}">Отправить Viber</a>
         </div>
         <div class="header-item"><a href="#">Детализация</a></div>
+        <div class="header-item"><a href="{% url 'get_sms_status' %}">Cтатусы</a></div>
     </div>
 
     <div class="line"></div>

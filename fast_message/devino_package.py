@@ -38,3 +38,6 @@ class DevinoClient:
         response = requests.get(self.get_sms_status_url, params=params)
 
         return response
+
+    def get_ts_from_response(self, response, key):
+        return int(response.json()[key][6:16])
