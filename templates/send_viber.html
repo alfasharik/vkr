@@ -8,26 +8,7 @@
         <div class="inner">
             <form class="main-form" method="post" action="{% url 'send_viber' %} ">
                 {% csrf_token %}
-                <p>
-                    <label>ИД сессии: </label>
-                    <input type="text" name="session_id">
-                </p>
-                <p>
-                    <label>Имя отправителя: </label>
-                    <input type="text" name="source">
-                </p>
-                <p>
-                    <label>Адрес получателя: </label>
-                    <input type="text" name="dest">
-                </p>
-                <p>
-                    <label>Текст: </label>
-                    <input type="text" name="data">
-                </p>
-                <p>
-                    <label>Время жизни: </label>
-                    <input type="text" name="validity">
-                </p>
+                {{ form.as_p }}
                 <input type="submit">
             </form>
             {{ id }}

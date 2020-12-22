@@ -3,6 +3,7 @@ from django.http import HttpResponse
 
 import fast_message.devino_package as devino_package
 from fast_message.models import Message
+from fast_message.forms import SendForm, SessionForm, StatusForm
 
 
 def index(request):
@@ -10,29 +11,34 @@ def index(request):
 
 
 def get_session(request):
-    if request.method != 'POST':
-        return render(request, 'session.html')
+    form = SessionForm(request.POST or None)
 
-    login = request.POST['login']
-    password = request.POST['password']
+    if request.method != 'POST' or not form.is_valid():
+        return render(request, 'session.html', {'form': form})
+
+    login = form.cleaned_data['login']
+    password = form.cleaned_data['password']
 
     devino_client = devino_package.DevinoClient()
     devino_response = devino_client.get_session(login, password)
 
     return render(
-        request, 'session.html',{'devino_response': devino_response}
+        request, 'session.html',
+        {'devino_response': devino_response, 'form':form}
     )
 
 
 def send_sms(request):
-    if request.method != 'POST':
-        return render(request, 'send_sms.html')
+    form = SendForm(request.POST or None)
 
-    session_id = request.POST['session_id']
-    source = request.POST['source']
-    dest = request.POST['dest']
-    data = request.POST['data']
-    validity = request.POST['validity']
+    if request.method != 'POST' or not form.is_valid():
+        return render(request, 'send_sms.html', {'form': form})
+
+    session_id = form.cleaned_data['session_id']
+    source = form.cleaned_data['source']
+    dest = form.cleaned_data['dest']
+    data = form.cleaned_data['data']
+    validity = form.cleaned_data['validity']
 
     devino_client = devino_package.DevinoClient()
     devino_response = devino_client.send_sms(
@@ -42,18 +48,20 @@ def send_sms(request):
     message_id = devino_response.text[2:20]
     Message.objects.create(message_id=message_id, phone=dest, channel='sms')
 
-    return render(request, 'send_sms.html', {'id': message_id}
-    )
+    return render(
+        request, 'send_sms.html', {'id': message_id, 'form': form})
 
 def send_viber(request):
-    if request.method != 'POST':
-        return render(request, 'send_viber.html')
+    form = SendForm(request.POST or None)
 
-    session_id = request.POST['session_id']
-    source = request.POST['source']
-    dest = request.POST['dest']
-    data = request.POST['data']
-    validity = request.POST['validity']
+    if request.method != 'POST' or not form.is_valid():
+        return render(request, 'send_viber.html', {'form': form})
+
+    session_id = form.cleaned_data['session_id']
+    source = form.cleaned_data['source']
+    dest = form.cleaned_data['dest']
+    data = form.cleaned_data['data']
+    validity = form.cleaned_data['validity']
 
     devino_client = devino_package.DevinoClient()
     devino_response = devino_client.send_viber(
@@ -64,16 +72,18 @@ def send_viber(request):
     Message.objects.create(message_id=message_id, phone=dest, channel='viber')
 
     return render(
-        request, 'send_viber.html', {'id': message_id}
+        request, 'send_viber.html', {'id': message_id, 'form': form}
     )
 
 
 def get_status(request):
-    if request.method != 'POST':
-        return render(request, 'get_status.html')
+    form = StatusForm(request.POST or None)
 
-    session_id = request.POST['session_id']
-    channel = request.POST['channel']
+    if request.method != 'POST' or not form.is_valid():
+        return render(request, 'get_status.html', {'form': form})
+
+    session_id = form.cleaned_data['session_id']
+    channel = form.cleaned_data['channel']
 
     devino_client = devino_package.DevinoClient()
 
@@ -102,5 +112,7 @@ def get_status(request):
 
         message.save()
 
-    return render(request, 'get_status.html', {'got_statuses': True})
+    return render(
+        request, 'get_status.html', {'got_statuses': True, 'form':form}
+    )
 
