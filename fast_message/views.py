@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 import fast_message.devino_package as devino_package
-from fast_message.models import SmsMessages
+from fast_message.models import Message
 
 
 def index(request):
@@ -38,11 +38,11 @@ def send_sms(request):
     devino_response = devino_client.send_sms(
         session_id, source, dest, data, validity
     )
-    message_id = devino_response.text[2:20]
-    SmsMessages.objects.create(message_id=message_id, phone=dest)
 
-    return render(
-        request, 'send_sms.html', {'id': message_id}
+    message_id = devino_response.text[2:20]
+    Message.objects.create(message_id=message_id, phone=dest, channel='sms')
+
+    return render(request, 'send_sms.html', {'id': message_id}
     )
 
 def send_viber(request):
@@ -60,23 +60,28 @@ def send_viber(request):
         session_id, source, dest, data, validity
     )
 
+    message_id = devino_response.text[2:21]
+    Message.objects.create(message_id=message_id, phone=dest, channel='viber')
+
     return render(
-        request, 'send_viber.html', {'devino_response': devino_response}
+        request, 'send_viber.html', {'id': message_id}
     )
 
 
-def get_sms_status(request):
+def get_status(request):
     if request.method != 'POST':
-        return render(request, 'get_sms_status.html')
+        return render(request, 'get_status.html')
 
     session_id = request.POST['session_id']
+    channel = request.POST['channel']
+
     devino_client = devino_package.DevinoClient()
 
-    messages = SmsMessages.objects.filter(state=None)
+    messages = Message.objects.filter(state=None, channel=channel)
+
     for message in messages:
-        devino_response = devino_client.get_sms_status(
-            session_id,
-            message.message_id
+        devino_response = devino_client.get_status(
+            channel, session_id, message.message_id
         )
 
         state = devino_response.json()['State']
@@ -97,4 +102,5 @@ def get_sms_status(request):
 
         message.save()
 
-    return render(request, 'get_sms_status.html', {'got_statuses': True})
+    return render(request, 'get_status.html', {'got_statuses': True})
+
