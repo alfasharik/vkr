@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 import fast_message.devino_package as devino_package
 from fast_message.models import Message
@@ -14,7 +15,7 @@ def get_session(request):
     form = SessionForm(request.POST or None)
 
     if request.method != 'POST' or not form.is_valid():
-        return render(request, 'session.html', {'form': form})
+        return render(request, 'get_session.html', {'form': form})
 
     login = form.cleaned_data['login']
     password = form.cleaned_data['password']
@@ -23,7 +24,7 @@ def get_session(request):
     devino_response = devino_client.get_session(login, password)
 
     return render(
-        request, 'session.html',
+        request, 'get_session.html',
         {'devino_response': devino_response, 'form':form}
     )
 
@@ -115,4 +116,14 @@ def get_status(request):
     return render(
         request, 'get_status.html', {'got_statuses': True, 'form':form}
     )
+
+
+def detail(request):
+    messages = Message.objects.all().order_by('-report_dt')
+
+    paginator = Paginator(messages, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    return render(request, 'detail.html', {'page': page, 'paginator': paginator})
 

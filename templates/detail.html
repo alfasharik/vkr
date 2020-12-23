@@ -5,6 +5,13 @@
 
 {% block content %}
     {% block inner_content %}
-        {{ r }}
+        {% for message in page %}
+            <p class="message">
+                {{ message.phone }} || {{ message.report_dt }} <br>
+                {{ message.channel }} || {{ message.state_desc }}
+            </p>
+        {% endfor %}
+
+       {% include 'paginator.html' with items=page paginator=paginator %}
     {% endblock %}
 {% endblock %}

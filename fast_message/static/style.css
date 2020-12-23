@@ -34,7 +34,7 @@ body {
 .container {
     background-color: floralwhite;
     width: 1000px;
-    height: 420px;
+    height: 470px;
     margin: 2px auto;
     padding-top: 20px;
 }
@@ -42,19 +42,75 @@ body {
 .inner {
     margin: 0 auto;
     width: 500px;
-    height: 400px;
+    height: 450px;
     background-color: #e1bee7;
 }
 
 .main-form {
-    width: 400px;
-    margin: 0 auto
+    width: 300px;
+    margin: 0 auto;
+    font-family: Bahnschrift;
 }
 
 .main-form p {
-    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
 }
 
-.main-form p input {
+.main-form input, textarea {
+    background-color: #edecd6;
+}
+
+.main-form textarea {
+    resize: none;
+}
+
+.main-form ul {
+    list-style: none;
+}
+
+.main-form input[type='submit'] {
+    display: block;
     margin: 0 auto;
+    width: 120px;
+    height: 30px;
+}
+
+.request-result {
+    display: block;
+    margin: 10px auto;
+    width: 325px;
+    background-color: #edecd6;;
+}
+
+.paginator {
+    list-style: none;
+    display: flex;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    text-decoration: none;
+    color: #5897fb;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.disabled a, .active span {
+    color: #4f4f4f;
+}
+
+.message {
+    background-color: #edecd6;
+    border: 2px solid #444444;
+    display: block;
+    width: 300px;
+    margin-left: 40px;
+    padding: 5px;
 }

@@ -9,22 +9,12 @@
             <form class="main-form" method="post" action=" {% url 'get_status' %} ">
                 {% csrf_token %}
                 {{ form.as_p }}
-{#                <p>#}
-{#                    <label>ИД сессии: </label>#}
-{#                    <input type="text" name="session_id">#}
-{#                </p>#}
-{#                <p>#}
-{#                    <label>Статусы SMS</label>#}
-{#                    <input type="radio" name="channel" value="sms">#}
-{#                </p>#}
-{#                <p>#}
-{#                    <label>Статусы Viber</label>#}
-{#                    <input type="radio" name="channel" value="viber">#}
-{#                </p>#}
                 <input type="submit" value="Получить">
             </form>
             {% if got_statuses %}
-                Статусы запрошены успешно и сохранены в базу
+                <p class="request-result">
+                    Статусы запрошены успешно и сохранены в базу
+                </p>
             {% endif %}
         </div>
     {% endblock %}

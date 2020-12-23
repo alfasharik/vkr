@@ -9,9 +9,9 @@
             <form class="main-form" method="post" action=" {% url 'get_session' %} ">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="submit">
+                <input type="submit" value="Получить">
             </form>
-            {{ devino_response.text }}
+            <p class="request-result">{{ devino_response.text }}</p>
         </div>
     {% endblock %}
 {% endblock %}

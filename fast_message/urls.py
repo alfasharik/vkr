@@ -9,4 +9,5 @@ urlpatterns = [
     path('send_sms/', views.send_sms, name='send_sms'),
     path('send_viber/', views.send_viber, name='send_viber'),
     path('get_status/', views.get_status, name='get_status'),
+    path('detail/', views.detail, name='detail'),
 ]
